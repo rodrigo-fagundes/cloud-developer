@@ -45,7 +45,7 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
         })
         .catch((error) => {
           //    E2. Return an error message when filtering fails
-          res.status(500).send({ message: 'Error applying filter' });
+          res.status(422).send({ message: 'Error applying filter' });
         });
     } catch (TypeError) {
       //    E1. Return an error message when URL is not valid
