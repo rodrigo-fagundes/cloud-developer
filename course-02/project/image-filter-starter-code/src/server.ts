@@ -1,11 +1,12 @@
-import express from 'express';
+import { Express, Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
 (async () => {
 
   // Init the Express application
-  const app = express();
+  const express = require('express');
+  const app: Express = express();
 
   // Set the network port
   const port = process.env.PORT || 8082;
@@ -28,7 +29,29 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
 
   /**************************************************************************** */
-
+  app.get('/filteredimage', async (req: Request, res: Response) => {
+    //    1. validate the image_url query
+    try {
+      const imageURL = req.query.image_url
+      const validURL = new URL(imageURL);
+      //    2. call filterImageFromURL(image_url) to filter the image
+      filterImageFromURL(imageURL)
+        .then((filteredPath) => {
+          //    3. send the resulting file in the response
+          res.sendFile(filteredPath, (err) => {
+            //    4. deletes any files on the server on finish of the response
+            if (!err) deleteLocalFiles([filteredPath]); 
+          });
+        })
+        .catch((error) => {
+          //    E2. Return an error message when filtering fails
+          res.status(422).send({ message: 'Error applying filter' });
+        });
+    } catch (TypeError) {
+      //    E1. Return an error message when URL is not valid
+      res.status(400).send({ message: 'Malformed image url' });
+    }
+  });
   //! END @TODO1
   
   // Root Endpoint
