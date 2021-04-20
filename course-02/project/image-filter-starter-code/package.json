@@ -10,10 +10,6 @@
     "dev": "ts-node-dev ./src/server.ts",
     "prod": "tsc && node ./www/server.js"
   },
-  // "repository": {
-  //   "type": "git",
-  //   "url": "git+https://github.com/grutt/udacity-c2-image-filter.git"
-  // },
   "author": "",
   "license": "ISC",
   "bugs": {
